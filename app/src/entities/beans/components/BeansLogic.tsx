@@ -43,10 +43,15 @@ const BeansLogic = ({ query }: { query: string | undefined }) => {
     }
   }, [page, hasMore, query]);
 
+  const onBottomHit = () => {
+    if (hasMore && !isLoading) {
+      setPage((state) => state + 1);
+    }
+  };
   return (
     <>
       <InfiniteScroll
-        onBottomHit={() => setPage((state) => state + 1)}
+        onBottomHit={() => onBottomHit()}
         isLoading={isLoading}
         hasMoreData={hasMore}
         loadOnMount={true}
