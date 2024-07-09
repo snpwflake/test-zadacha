@@ -31,15 +31,13 @@ const BeansLogic = ({ query }: { query: string | undefined }) => {
   };
 
   useEffect(() => {
-    setPage(1);
+    setPage((state) => state - state + 1);
     setHasMore(true);
     setItems([]);
   }, [query]);
 
   useEffect(() => {
-    if (hasMore && !isLoading) {
-      fetchRecipes();
-    }
+    fetchRecipes();
   }, [page, hasMore, query]);
 
   const onBottomHit = () => {
