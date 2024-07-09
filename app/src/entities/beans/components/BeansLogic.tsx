@@ -21,7 +21,6 @@ const BeansLogic = ({ query }: { query: string | undefined }) => {
         groupName: query || "",
       });
       setItems((state) => [...state, ...response.data.items]);
-
       if (response.data.currentPage >= response.data.totalPages) {
         setHasMore(false);
       }
@@ -44,10 +43,11 @@ const BeansLogic = ({ query }: { query: string | undefined }) => {
   }, [page, hasMore, query]);
 
   const onBottomHit = () => {
-    if (hasMore && !isLoading) {
+    if (!isLoading) {
       setPage((state) => state + 1);
     }
   };
+
   return (
     <>
       <InfiniteScroll

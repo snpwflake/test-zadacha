@@ -18,7 +18,6 @@ const HistoryLogic = () => {
     try {
       const response = await HistoryService.all({ pageIndex: page });
       setItems((state) => [...state, ...response.data.items]);
-      setPage(response.data.currentPage + 1);
       if (response.data.currentPage >= response.data.totalPages) {
         setHasMore(false);
       }
@@ -28,10 +27,14 @@ const HistoryLogic = () => {
     setIsLoading(false);
   };
 
+  useEffect(() => {
+    fetchData();
+  }, [page]);
+
   return (
     <>
       <InfiniteScroll
-        onBottomHit={() => fetchData()}
+        onBottomHit={() => setPage((state) => state + 1)}
         isLoading={isLoading}
         hasMoreData={hasMore}
         loadOnMount={true}

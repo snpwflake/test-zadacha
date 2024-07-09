@@ -15,12 +15,10 @@ const FactsLogic = () => {
   const fetchData = async () => {
     setIsLoading(true);
     setError(null);
-
     try {
       const response = await FactsService.all({ pageIndex: page });
       const data = response.data;
       setItems((prevItems: any) => [...prevItems, ...data.items]);
-      setPage(response.data.currentPage + 1);
       if (response.data.currentPage >= response.data.totalPages) {
         setHasMore(false);
       }
@@ -31,10 +29,14 @@ const FactsLogic = () => {
     }
   };
 
+  useEffect(() => {
+    fetchData();
+  }, [page]);
+
   return (
     <>
       <InfiniteScroll
-        onBottomHit={() => fetchData()}
+        onBottomHit={() => setPage((state) => state + 1)}
         isLoading={isLoading}
         hasMoreData={hasMore}
         loadOnMount={true}

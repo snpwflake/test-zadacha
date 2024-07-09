@@ -18,7 +18,6 @@ const CombinationLogic = () => {
     try {
       const response = await CombinationsService.all({ pageIndex: page });
       setItems((state) => [...state, ...response.data.items]);
-      setPage(response.data.currentPage + 1);
       if (response.data.currentPage >= response.data.totalPages) {
         setHasMore(false);
       }
@@ -27,10 +26,14 @@ const CombinationLogic = () => {
     }
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    fetchData();
+  }, [page]);
   return (
     <>
       <InfiniteScroll
-        onBottomHit={() => fetchData()}
+        onBottomHit={() => setPage((state) => state + 1)}
         isLoading={isLoading}
         hasMoreData={hasMore}
         loadOnMount={true}

@@ -18,7 +18,6 @@ const RecipeListLogic = () => {
     try {
       const response = await RecipesService.all({ pageIndex: page });
       setRecipes((state) => [...state, ...response.data.items]);
-      setPage(response.data.currentPage + 1);
       if (response.data.currentPage >= response.data.totalPages) {
         setHasMore(false);
       }
@@ -28,10 +27,14 @@ const RecipeListLogic = () => {
     setIsLoading(false);
   };
 
+  useEffect(() => {
+    fetchRecipes();
+  }, [page]);
+
   return (
     <>
       <InfiniteScroll
-        onBottomHit={() => fetchRecipes()}
+        onBottomHit={() => setPage((state) => state + 1)}
         isLoading={isLoading}
         hasMoreData={hasMore}
         loadOnMount={true}
