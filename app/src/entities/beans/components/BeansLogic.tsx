@@ -11,8 +11,8 @@ const BeansLogic = ({ query }: { query: string | undefined }) => {
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState<number>(1);
   const [hasMore, setHasMore] = useState<boolean>(true);
-
-  const fetchRecipes = async () => {
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const fetchRecipes = async (page: number, query: string | undefined) => {
     setIsLoading(true);
     setError(null);
     try {
@@ -31,25 +31,20 @@ const BeansLogic = ({ query }: { query: string | undefined }) => {
   };
 
   useEffect(() => {
-    setPage((state) => state - state + 1);
-    setHasMore(true);
+    setSearchQuery(query || "");
     setItems([]);
+    setPage(1);
+    setHasMore(true);
   }, [query]);
 
   useEffect(() => {
-    fetchRecipes();
-  }, [page, hasMore, query]);
-
-  const onBottomHit = () => {
-    if (!isLoading) {
-      setPage((state) => state + 1);
-    }
-  };
+    fetchRecipes(page, searchQuery);
+  }, [page, searchQuery]);
 
   return (
     <>
       <InfiniteScroll
-        onBottomHit={() => onBottomHit()}
+        onBottomHit={() => setPage((state) => state + 1)}
         isLoading={isLoading}
         hasMoreData={hasMore}
         loadOnMount={true}
